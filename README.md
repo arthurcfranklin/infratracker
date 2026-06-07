@@ -6,6 +6,8 @@
 ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?logo=sqlite)
 ![License](https://img.shields.io/badge/Licença-MIT-green)
 
+**Versão Atual:** v0.1.0-alpha
+
 ## 📖 Sobre o Projeto
 
 O IT Infrastructure Monitoring & Asset Reporting Tool (IT-IMRT) é um projeto voltado à automação de inventário e monitoramento de infraestrutura de TI.
@@ -45,9 +47,9 @@ Interface Web
    ▼
 FastAPI
    │
-   ├── Inventário
-   ├── Monitoramento
-   └── Relatórios
+   ├── Módulo de Inventário
+   ├── Módulo de Monitoramento
+   └── Módulo de Relatórios
    │
    ▼
 SQLite
