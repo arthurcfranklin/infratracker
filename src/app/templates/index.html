@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT-IMRT Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .navbar {
+            background-color: #111827;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .card {
+            background-color: #1e293b;
+            border: none;
+            border-radius: 15px;
+            color: white;
+        }
+
+        .table {
+            color: white;
+        }
+
+        .table-dark {
+            background-color: #111827;
+        }
+
+        .status-online {
+            background: #198754;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .status-offline {
+            background: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .dashboard-title {
+            font-weight: 700;
+        }
+
+        .btn-delete {
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">IT-IMRT</span>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+
+        <h2 class="dashboard-title">Infrastructure Monitoring Dashboard</h2>
+
+        <p class="text-secondary">
+            IT Infrastructure Monitoring & Asset Reporting Tool
+        </p>
+
+        <div class="row mb-4">
+
+            <div class="col-md-4 mb-3">
+                <div class="card p-3 text-center">
+                    <h6>Total Assets</h6>
+                    <h1>{{ total_assets }}</h1>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card p-3 text-center">
+                    <h6>Online Assets</h6>
+                    <h1>{{ online_assets }}</h1>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card p-3 text-center">
+                    <h6>Offline Assets</h6>
+                    <h1>{{ offline_assets }}</h1>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="mb-0">Asset Inventory</h4>
+                <span class="text-secondary">Current registered assets</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Hostname</th>
+                            <th>IP Address</th>
+                            <th>Operating System</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for asset in assets %}
+                        <tr>
+                            <td>{{ asset.id }}</td>
+                            <td>{{ asset.hostname }}</td>
+                            <td>{{ asset.ip_address }}</td>
+                            <td>{{ asset.operating_system }}</td>
+
+                            <td>
+                                {% if asset.status.lower() == "online" %}
+                                <span class="status-online">Online</span>
+                                {% else %}
+                                <span class="status-offline">Offline</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <a href="/assets/delete/{{ asset.id }}"
+                                   class="btn btn-sm btn-danger btn-delete"
+                                   onclick="return confirm('Deseja realmente excluir este ativo?');">
+                                    Excluir
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
