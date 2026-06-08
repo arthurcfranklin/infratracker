@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Form, HTTPException, Query, Request
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.exc import IntegrityError
-from fastapi.staticfiles import StaticFiles
 
 from src.app.api.assets import router as assets_router
 from src.app.database.db import Base, SessionLocal, engine
@@ -123,6 +123,35 @@ def create_asset_web(
 ):
     db = SessionLocal()
 
+    hostname = hostname.strip().upper()
+    ip_address = ip_address.strip()
+
+    existing_hostname = (
+        db.query(Asset)
+        .filter(Asset.hostname == hostname)
+        .first()
+    )
+
+    if existing_hostname:
+        db.close()
+        return RedirectResponse(
+            url="/dashboard?error=Já existe um ativo cadastrado com este nome.",
+            status_code=303,
+        )
+
+    existing_ip = (
+        db.query(Asset)
+        .filter(Asset.ip_address == ip_address)
+        .first()
+    )
+
+    if existing_ip:
+        db.close()
+        return RedirectResponse(
+            url="/dashboard?error=Já existe um ativo cadastrado com este endereço IP.",
+            status_code=303,
+        )
+
     new_asset = Asset(
         hostname=hostname,
         ip_address=ip_address,
@@ -139,7 +168,7 @@ def create_asset_web(
         db.rollback()
         db.close()
         return RedirectResponse(
-            url="/dashboard?error=Hostname ou endereço IP já cadastrado em outro ativo.",
+            url="/dashboard?error=Já existe um ativo cadastrado com este nome ou endereço IP.",
             status_code=303,
         )
 
@@ -149,7 +178,6 @@ def create_asset_web(
         url="/dashboard?success=Ativo cadastrado com sucesso.",
         status_code=303,
     )
-
 
 @app.post("/dashboard/assets/update/{asset_id}")
 def update_asset_web(
@@ -169,12 +197,15 @@ def update_asset_web(
         db.close()
         raise HTTPException(status_code=404, detail="Ativo não encontrado")
 
+    hostname = hostname.strip().upper()
+    ip_address = ip_address.strip()
+
     asset.hostname = hostname
     asset.ip_address = ip_address
+    asset.url = url
     asset.operating_system = operating_system
     asset.asset_type = asset_type
     asset.status = status
-    asset.url = url
 
     try:
         db.commit()
@@ -182,7 +213,7 @@ def update_asset_web(
         db.rollback()
         db.close()
         return RedirectResponse(
-            url="/dashboard?error=Hostname ou endereço IP já cadastrado em outro ativo.",
+            url="/dashboard?error=Já existe um ativo cadastrado com este nome ou endereço IP.",
             status_code=303,
         )
 
