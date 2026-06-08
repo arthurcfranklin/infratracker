@@ -261,10 +261,45 @@
                 </div>
 
                 <form method="get" action="/dashboard" class="d-flex gap-2">
-                    <input type="text" name="search" value="{{ search }}" class="form-control"
-                        placeholder="Pesquisar por hostname, IP ou tipo...">
-                    <button class="btn btn-outline-info" type="submit">Buscar</button>
-                    <a href="/dashboard" class="btn btn-outline-secondary">Limpar</a>
+
+                    <select
+                        name="status_filter"
+                        class="form-select"
+                        onchange="this.form.submit()"
+>
+                        <option value="Todos" {% if status_filter == "Todos" %}selected{% endif %}>
+                            Todos
+                        </option>
+
+                        <option value="Online" {% if status_filter == "Online" %}selected{% endif %}>
+                            Online
+                        </option>
+
+                        <option value="Offline" {% if status_filter == "Offline" %}selected{% endif %}>
+                            Offline
+                        </option>
+
+                        <option value="Em Manutenção" {% if status_filter == "Em Manutenção" %}selected{% endif %}>
+                            Em Manutenção
+                        </option>
+                    </select>
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ search }}"
+                        class="form-control"
+                        placeholder="Pesquisar por hostname, IP ou tipo..."
+                    >
+
+                    <button class="btn btn-outline-info" type="submit">
+                        Buscar
+                    </button>
+
+                    <a href="/dashboard" class="btn btn-outline-secondary">
+                        Limpar
+                    </a>
+
                 </form>
             </div>
 

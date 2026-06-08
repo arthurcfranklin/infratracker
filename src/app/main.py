@@ -41,10 +41,12 @@ def root():
 def dashboard(
     request: Request,
     search: str | None = Query(default=None),
+    status_filter: str | None = Query(default=None),
     sort_by: str = Query(default="id"),
     order: str = Query(default="asc"),
     error: str | None = Query(default=None),
     success: str | None = Query(default=None),
+    
 ):
     db = SessionLocal()
 
@@ -59,6 +61,9 @@ def dashboard(
             | (Asset.asset_type.ilike(search_filter))
             | (Asset.status.ilike(search_filter))
         )
+
+    if status_filter and status_filter != "Todos":
+        query = query.filter(Asset.status == status_filter)
 
     allowed_sort_fields = {
         "id": Asset.id,
@@ -103,6 +108,7 @@ def dashboard(
             "order": order,
             "error": error,
             "success": success,
+            "status_filter": status_filter or "Todos",
         },
     )
 
