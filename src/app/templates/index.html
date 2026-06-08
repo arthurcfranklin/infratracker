@@ -276,6 +276,7 @@
                             <th>ID</th>
                             <th>Nome do Ativo</th>
                             <th>Endereço IP</th>
+                            <th>URL</th>
                             <th>Sistema Operacional</th>
                             <th>Tipo</th>
                             <th>Status</th>
@@ -332,6 +333,15 @@
                             <td>{{ asset.id }}</td>
                             <td>{{ asset.hostname }}</td>
                             <td>{{ asset.ip_address }}</td>
+                            <td>
+    {% if asset.url %}
+        <a href="{{ asset.url }}" target="_blank" class="text-info text-decoration-none">
+            Ir para URL
+        </a>
+    {% else %}
+        —
+    {% endif %}
+</td>
                             <td>{{ asset.operating_system }}</td>
                             <td>{{ asset.asset_type }}</td>
                             <td>
@@ -364,7 +374,7 @@
                                 <div class="modal-content">
 
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Edit Asset #{{ asset.id }}</h5>
+                                        <h5 class="modal-title">Editar Ativo #{{ asset.id }}</h5>
                                         <button type="button" class="btn-close btn-close-white"
                                             data-bs-dismiss="modal"></button>
                                     </div>
@@ -373,25 +383,31 @@
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-                                                <label class="form-label">Hostname</label>
+                                                <label class="form-label">Nome do Ativo</label>
                                                 <input type="text" name="hostname" class="form-control"
                                                     value="{{ asset.hostname }}" required>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label">IP Address</label>
+                                                <label class="form-label">Endereço IP</label>
                                                 <input type="text" name="ip_address" class="form-control"
                                                     value="{{ asset.ip_address }}" required>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label">Operating System</label>
+                                                <label class="form-label">URL</label>
+                                                <input type="text" name="url" class="form-control"
+                                                    value="{{ asset.url or '' }}" required>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Sistema Operacional</label>
                                                 <input type="text" name="operating_system" class="form-control"
                                                     value="{{ asset.operating_system }}" required>
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label">Asset Type</label>
+                                                <label class="form-label">Tipo de Ativo</label>
                                                 <input type="text" name="asset_type" class="form-control"
                                                     value="{{ asset.asset_type }}" required>
                                             </div>
@@ -401,7 +417,7 @@
                                                 <select name="status" class="form-select" required>
                                                     <option value="Online" {% if asset.status=="Online" %}selected{% endif %}>Online</option>
                                                     <option value="Offline" {% if asset.status=="Offline" %}selected{% endif %}>Offline</option>
-                                                    <option value="Maintenance" {% if asset.status=="Maintenance" %}selected{% endif %}>Maintenance</option>
+                                                    <option value="Desligada" {% if asset.status=="Desligada" %}selected{% endif %}>Desligada</option>
                                                 </select>
                                             </div>
 
@@ -410,7 +426,7 @@
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                                         </div>
                                     </form>
 
@@ -450,6 +466,11 @@
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label">URL</label>
+                            <input type="text" name="url" class="form-control" placeholder="https://zabbix.local" required>
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label">Sistema Operacional</label>
                             <input type="text" name="operating_system" class="form-control"
                                 placeholder="Ubuntu Server 24.04" required>
@@ -465,7 +486,7 @@
                             <select name="status" class="form-select" required>
                                 <option value="Online">Online</option>
                                 <option value="Offline">Offline</option>
-                                <option value="Maintenance">Em Manutenção</option>
+                                <option value="Desligada">Em Manutenção</option>
                             </select>
                         </div>
 
