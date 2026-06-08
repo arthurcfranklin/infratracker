@@ -272,17 +272,59 @@
                 <table class="table table-hover align-middle">
 
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome do Ativo</th>
-                            <th>Endereço IP</th>
-                            <th>URL</th>
-                            <th>Sistema Operacional</th>
-                            <th>Tipo</th>
-                            <th>Status</th>
-                            <th class="text-end">Ações</th>
-                        </tr>
-                    </thead>
+    <tr>
+        <th>
+            <a href="/dashboard?sort_by=id&order={% if sort_by == 'id' and order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="text-light text-decoration-none">
+                ID
+            </a>
+        </th>
+
+        <th>
+            <a href="/dashboard?sort_by=hostname&order={% if sort_by == 'hostname' and order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="text-light text-decoration-none">
+                Nome do Ativo
+            </a>
+        </th>
+
+        <th>
+            <a href="/dashboard?sort_by=ip_address&order={% if sort_by == 'ip_address' and order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="text-light text-decoration-none">
+                Endereço IP
+            </a>
+        </th>
+
+        <th>
+            <a href="/dashboard?sort_by=url&order={% if sort_by == 'url' and order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="text-light text-decoration-none">
+                URL
+            </a>
+        </th>
+
+        <th>
+            <a href="/dashboard?sort_by=operating_system&order={% if sort_by == 'operating_system' and order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="text-light text-decoration-none">
+                Sistema Operacional
+            </a>
+        </th>
+
+        <th>
+            <a href="/dashboard?sort_by=asset_type&order={% if sort_by == 'asset_type' and order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="text-light text-decoration-none">
+                Tipo
+            </a>
+        </th>
+
+        <th>
+            <a href="/dashboard?sort_by=status&order={% if sort_by == 'status' and order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="text-light text-decoration-none">
+                Status
+            </a>
+        </th>
+
+        <th class="text-end">Ações</th>
+    </tr>
+</thead>
 
                     <tbody>
                         {% for asset in assets %}
@@ -444,7 +486,7 @@
                                                 <select name="status" class="form-select" required>
                                                     <option value="Online" {% if asset.status=="Online" %}selected{% endif %}>Online</option>
                                                     <option value="Offline" {% if asset.status=="Offline" %}selected{% endif %}>Offline</option>
-                                                    <option value="Desligada" {% if asset.status=="Desligada" %}selected{% endif %}>Desligada</option>
+                                                    <option value="Em Manutenção" {% if asset.status=="Em Manutenção" %}selected{% endif %}>Em Manutenção</option>
                                                 </select>
                                             </div>
 
@@ -513,7 +555,7 @@
                             <select name="status" class="form-select" required>
                                 <option value="Online">Online</option>
                                 <option value="Offline">Offline</option>
-                                <option value="Desligada">Em Manutenção</option>
+                                <option value="Em Manutenção">Em Manutenção</option>
                             </select>
                         </div>
 
@@ -564,7 +606,7 @@
 
                 <div>
                     <a href="/dashboard" class="btn btn-success">
-                        Sair
+                        Ok
                     </a>
                 </div>
 

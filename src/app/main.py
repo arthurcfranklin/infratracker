@@ -37,9 +37,12 @@ def root():
 
 
 @app.get("/dashboard")
+@app.get("/dashboard")
 def dashboard(
     request: Request,
     search: str | None = Query(default=None),
+    sort_by: str = Query(default="id"),
+    order: str = Query(default="asc"),
     error: str | None = Query(default=None),
     success: str | None = Query(default=None),
 ):
@@ -57,12 +60,33 @@ def dashboard(
             | (Asset.status.ilike(search_filter))
         )
 
-    assets = query.order_by(Asset.id.desc()).all()
+    allowed_sort_fields = {
+        "id": Asset.id,
+        "hostname": Asset.hostname,
+        "ip_address": Asset.ip_address,
+        "url": Asset.url,
+        "operating_system": Asset.operating_system,
+        "asset_type": Asset.asset_type,
+        "status": Asset.status,
+    }
+
+    sort_column = allowed_sort_fields.get(sort_by, Asset.id)
+
+    if order == "desc":
+        query = query.order_by(sort_column.desc())
+    else:
+        query = query.order_by(sort_column.asc())
+
+    assets = query.all()
     all_assets = db.query(Asset).all()
 
     total_assets = len(all_assets)
-    online_assets = len([asset for asset in all_assets if asset.status.lower() == "online"])
-    offline_assets = len([asset for asset in all_assets if asset.status.lower() == "offline"])
+    online_assets = len(
+        [asset for asset in all_assets if asset.status.lower() == "online"]
+    )
+    offline_assets = len(
+        [asset for asset in all_assets if asset.status.lower() == "offline"]
+    )
 
     db.close()
 
@@ -75,11 +99,12 @@ def dashboard(
             "online_assets": online_assets,
             "offline_assets": offline_assets,
             "search": search or "",
+            "sort_by": sort_by,
+            "order": order,
             "error": error,
             "success": success,
         },
     )
-
 
 @app.post("/dashboard/assets/create")
 def create_asset_web(
@@ -159,57 +184,6 @@ def update_asset_web(
 
     return RedirectResponse(
         url="/dashboard?success=Ativo atualizado com sucesso.",
-        status_code=303,
-    )
-
-
-@app.post("/dashboard/assets/start/{asset_id}")
-def start_asset_web(asset_id: int):
-    db = SessionLocal()
-    asset = db.query(Asset).filter(Asset.id == asset_id).first()
-
-    if asset:
-        asset.status = "Online"
-        db.commit()
-
-    db.close()
-
-    return RedirectResponse(
-        url="/dashboard?success=Ativo iniciado com sucesso.",
-        status_code=303,
-    )
-
-
-@app.post("/dashboard/assets/stop/{asset_id}")
-def stop_asset_web(asset_id: int):
-    db = SessionLocal()
-    asset = db.query(Asset).filter(Asset.id == asset_id).first()
-
-    if asset:
-        asset.status = "Offline"
-        db.commit()
-
-    db.close()
-
-    return RedirectResponse(
-        url="/dashboard?success=Ativo parado com sucesso.",
-        status_code=303,
-    )
-
-
-@app.post("/dashboard/assets/restart/{asset_id}")
-def restart_asset_web(asset_id: int):
-    db = SessionLocal()
-    asset = db.query(Asset).filter(Asset.id == asset_id).first()
-
-    if asset:
-        asset.status = "Online"
-        db.commit()
-
-    db.close()
-
-    return RedirectResponse(
-        url="/dashboard?success=Ativo reiniciado com sucesso.",
         status_code=303,
     )
 
