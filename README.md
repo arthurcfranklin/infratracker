@@ -172,9 +172,3 @@ infratrack/
 **Próximo marco:** Implementação do monitoramento ICMP e histórico de disponibilidade.
 
 ---
-
-## 👨‍💻 Autor
-
-Arthur Franklin
-
-Auxiliar de TI | Infraestrutura | Monitoramento | Automação | Python
