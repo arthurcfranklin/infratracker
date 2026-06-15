@@ -1,4 +1,4 @@
-# InfraTrack
+# InfraTracker
 
 ![Python](https://img.shields.io/badge/Python-3.12+-blue?logo=python)
 ![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-orange)
